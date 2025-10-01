@@ -11,4 +11,5 @@ export const {
     WHATSAPP_ACCESS_TOKEN,
     WHATSAPP_PHONE_NUMBER_ID,
     WHATSAPP_VERIFY_TOKEN,
+    GEMINI_API_KEY,
 } = process.env;
