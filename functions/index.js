@@ -1,8 +1,10 @@
-import * as v2 from "firebase-functions/v2";
+import * as functions from "firebase-functions/v2";
+import app from "./src/app.js";
 
-v2.setGlobalOptions({ maxInstances: 10 });
-
-export const api = v2.https.onRequest((req, res) => {
-    v2.logger.info("Hello logs!", { structuredData: true });
-    res.send("Hello from Firebase!");
+functions.setGlobalOptions({
+    region: "us-central1",  // o tu región preferida
+    memory: "512MiB",
+    maxInstances: 10,
 });
+
+export const api = functions.https.onRequest(app);
