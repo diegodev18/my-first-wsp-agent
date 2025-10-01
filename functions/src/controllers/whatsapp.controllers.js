@@ -16,7 +16,12 @@ export const getWebhook = (req, res) => {
 export const postWebhook = async (req, res) => {
     req.log.info("Webhook received:", JSON.stringify(req.body, null, 2));
 
-    const msg = req.body.entry[0].changes[0].value.messages[0];
+    const entry = req.body && req.body.entry && req.body.entry[0];
+    const change = entry && entry.changes && entry.changes[0];
+    const value = change && change.value;
+    const messages = value && value.messages;
+    const msg = messages && messages[0];
+
     if (msg && msg.type === "text" && msg.from) {
         const response = await get(msg.text.body);
 
