@@ -1,8 +1,8 @@
 import { ai } from "../../lib/llm.js"
 
-export const get = async (text) => {
+export const get = async (prompt) => {
     const response = await ai.models.generateContent({
-        contents: text,
+        contents: prompt,
         config: {
             maxOutputTokens: 1024,
         }
