@@ -12,8 +12,7 @@ export const getWebhook = (req, res) => {
 };
 
 export const postWebhook = (req, res) => {
-    const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
-    console.log(`[${timestamp}] Webhook received:`, JSON.stringify(req.body, null, 2));
+    console.log("Webhook received:", JSON.stringify(req.body, null, 2));
 
     return res.status(200).end();
 }
