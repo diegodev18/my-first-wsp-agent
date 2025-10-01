@@ -20,6 +20,11 @@ export const postWebhook = async (req, res) => {
     if (msg && msg.type === "text" && msg.from) {
         const response = await get(msg.text.body);
 
+        if (!response || !response.text) {
+            req.log.error("No response from LLM or response is invalid");
+            return res.status(500).end();
+        }
+
         const payload = {
             type: "text",
             text: {
