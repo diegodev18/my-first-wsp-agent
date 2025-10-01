@@ -22,15 +22,16 @@ export const postWebhook = async (req, res) => {
 
         if (!response || !response.text) {
             req.log.error("No response from LLM or response is invalid");
-            return res.status(200).end();
         }
 
         const payload = {
             type: "text",
             text: {
-                body: response.text
+                body: response && response.text ?
+                    response.text :
+                    "Lo siento, no puedo procesar tu solicitud en este momento.",
             }
-        }
+        };
         sendMessage(msg.from, payload);
     }
 
