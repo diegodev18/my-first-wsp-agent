@@ -6,14 +6,18 @@ export const get = async (prompt) => {
         return null;
     }
 
-    const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: `${prompt}. Que la respuesta sea breve y concisa, no exceda los 500 caracteres.`,
-        config: {
-            maxOutputTokens: 100,
-            temperature: 0.5,
-        }
-    });
+    try {
+        const response = await ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents: `${prompt}. Que la respuesta sea breve y concisa, no exceda los 500 caracteres.`,
+            config: {
+                maxOutputTokens: 100,
+                temperature: 0.5,
+            }
+        });
+        return response;
+    } catch (err) {
+        return null;
+    }
 
-    return response;
 }
