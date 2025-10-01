@@ -32,17 +32,17 @@ export const add = async (waId, userPrompt) => {
 
     const docRef = collection.doc(waId);
     if (!docRef) {
-        collection.add({ waId, memory: newMemory });
+        collection.add({ waId, memory: newMemory.text });
         return;
     }
 
     const doc = await docRef.get();
     if (doc.exists) {
         const updatedMemory = doc.data().memory && doc.data().memory.trim() !== "" ?
-            `${doc.data().memory}\n${newMemory}` :
-            newMemory;
+            `${doc.data().memory}\n${newMemory.text}` :
+            newMemory.text;
         await docRef.update({ memory: updatedMemory });
     } else {
-        await docRef.set({ memory: newMemory });
+        await docRef.set({ memory: newMemory.text });
     }
 }
