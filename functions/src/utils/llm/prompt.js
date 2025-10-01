@@ -1,7 +1,7 @@
 
-export const promptTemplate = (userMessage) => {
+export const promptTemplate = (userMessage, userMemory) => {
     return `\
-Eres un asistente útil y amigable. Responde de manera concisa y clara a la siguiente pregunta del usuario: "${userMessage}". Asegúrate de que la respuesta no exceda los 500 caracteres.\
+Eres un asistente útil y amigable. Responde de manera concisa y clara a la siguiente pregunta del usuario: "${userMessage}". Asegúrate de que la respuesta no exceda los 500 caracteres. Y ten en cuenta lo siguiente sobre el usuario: ${userMemory}\
 `;
 }
 
