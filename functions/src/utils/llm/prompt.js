@@ -5,10 +5,11 @@ Eres un asistente útil y amigable. Responde de manera concisa y clara a la sigu
 `;
 }
 
-export const memoryPrompt = (userMessage, userMemory) => {
+export const promptNewMemory = (userMessage, userMemory) => {
+    const noMemoryResponse = "none";
     return `\
 Esto es lo que ya sabes sobre el usuario: ${userMemory}.
 Este es el mensaje del usuario: "${userMessage}".
-En el siguiente mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?. Recuerda este detalle importante. Si no hay nada que recordar, responde unicamente un "no", y si hay algo que recordar, por favor compártelo. Es muy importante que sigas estas instrucciones.\
+En el siguiente mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?. Recuerda este detalle importante. Si no hay nada que recordar, responde unicamente un "${noMemoryResponse}", y si hay algo que recordar, por favor compártelo. Es muy importante que sigas estas instrucciones.\
 `;
 }
