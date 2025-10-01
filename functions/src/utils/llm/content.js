@@ -7,7 +7,11 @@ export const get = async (prompt) => {
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: prompt,
+        contents: `${prompt}. Que la respuesta sea breve y concisa, no exceda los 500 caracteres.`,
+        config: {
+            maxOutputTokens: 100,
+            temperature: 0.5,
+        }
     });
 
     return response;
