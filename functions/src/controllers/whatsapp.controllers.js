@@ -1,5 +1,6 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
+import { get } from "../utils/llm/content.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -12,17 +13,30 @@ export const getWebhook = (req, res) => {
     return res.status(403).end();
 };
 
-export const postWebhook = (req, res) => {
-    req.log.info("Webhook received:", JSON.stringify(req.body, null, 2));
+export const postWebhook = async (req, res) => {
+    req.log.info(`Webhook received: ${JSON.stringify(req.body, null, 2)}`);
 
-    const msg = req.body.entry[0].changes[0].value.messages[0];
+    const entry = req.body && req.body.entry && req.body.entry[0];
+    const change = entry && entry.changes && entry.changes[0];
+    const value = change && change.value;
+    const messages = value && value.messages;
+    const msg = messages && messages[0];
+
     if (msg && msg.type === "text" && msg.from) {
+        const response = await get(msg.text.body);
+
+        if (!response || !response.text) {
+            req.log.error("No response from LLM or response is invalid");
+        }
+
         const payload = {
             type: "text",
             text: {
-                body: `You sent: ${msg.text.body}`
+                body: response && response.text ?
+                    response.text :
+                    "Lo siento, no puedo procesar tu solicitud en este momento.",
             }
-        }
+        };
         sendMessage(msg.from, payload);
     }
 
