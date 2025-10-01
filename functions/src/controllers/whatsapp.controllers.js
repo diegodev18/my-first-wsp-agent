@@ -14,7 +14,7 @@ export const getWebhook = (req, res) => {
 };
 
 export const postWebhook = async (req, res) => {
-    req.log.info("Webhook received:", JSON.stringify(req.body, null, 2));
+    req.log.info(`Webhook received: ${JSON.stringify(req.body, null, 2)}`);
 
     const entry = req.body && req.body.entry && req.body.entry[0];
     const change = entry && entry.changes && entry.changes[0];
