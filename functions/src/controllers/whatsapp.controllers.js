@@ -1,4 +1,4 @@
-import { WHATSAPP_VERIFY_TOKEN } from "../config";
+import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
