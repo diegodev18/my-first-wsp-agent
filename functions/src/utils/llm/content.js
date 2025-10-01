@@ -6,10 +6,8 @@ export const get = async (prompt) => {
     }
 
     const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
         contents: prompt,
-        config: {
-            maxOutputTokens: 1024,
-        }
     });
 
     return response;
