@@ -1,6 +1,7 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
-import { get } from "../utils/llm/content.js";
+import { get as askToLlm } from "../utils/llm/content.js";
+import { get as getMemory } from "../utils/db/memory.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -25,7 +26,9 @@ export const postWebhook = async (req, res) => {
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
 
-        const response = await get(msg.text.body);
+        const memory = await getMemory(msg.from);
+
+        const response = await askToLlm(msg.text.body, memory);
 
         if (!response || !response.text) {
             req.log.error("No response from LLM or response is invalid");
