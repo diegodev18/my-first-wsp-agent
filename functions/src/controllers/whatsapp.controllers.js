@@ -23,7 +23,7 @@ export const postWebhook = async (req, res) => {
         const payload = {
             type: "text",
             text: {
-                body: response
+                body: response.text
             }
         }
         sendMessage(msg.from, payload);
