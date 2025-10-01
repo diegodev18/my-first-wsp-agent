@@ -1,11 +1,8 @@
-import { setGlobalOptions } from "firebase-functions";
-import { onRequest } from "firebase-functions/v1/https";
-import logger from "firebase-functions/logger";
+import * as v2 from "firebase-functions/v2";
 
+v2.setGlobalOptions({ maxInstances: 10 });
 
-setGlobalOptions({ maxInstances: 10 });
-
-export const api = onRequest((req, res) => {
-    logger.info("Hello logs!", { structuredData: true });
+export const api = v2.https.onRequest((req, res) => {
+    v2.logger.info("Hello logs!", { structuredData: true });
     res.send("Hello from Firebase!");
 });
