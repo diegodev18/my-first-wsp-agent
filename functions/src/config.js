@@ -10,4 +10,5 @@ export const {
     PORT = 3000,
     WHATSAPP_ACCESS_TOKEN,
     WHATSAPP_PHONE_NUMBER_ID,
+    WHATSAPP_VERIFY_TOKEN,
 } = process.env;
