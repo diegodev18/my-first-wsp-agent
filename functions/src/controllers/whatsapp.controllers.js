@@ -22,7 +22,9 @@ export const postWebhook = async (req, res) => {
     const messages = value && value.messages;
     const msg = messages && messages[0];
 
-    if (msg && msg.type === "text" && msg.from) {
+    if (msg && msg.type === "text" && msg.from && msg.text) {
+        req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
+
         const response = await get(msg.text.body);
 
         if (!response || !response.text) {
