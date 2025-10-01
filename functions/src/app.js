@@ -1,6 +1,9 @@
 import express from "express";
 
 import whatsappRoutes from "./routes/whatsapp.routes.js";
+import { setRefreshInterval } from "./utils/whatsapp/token.js";
+
+setRefreshInterval();
 
 const app = express();
 
