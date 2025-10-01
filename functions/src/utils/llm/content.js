@@ -1,4 +1,4 @@
-import { ai } from "../../lib/llm"
+import { ai } from "../../lib/llm.js"
 
 export const get = async (text) => {
     const response = await ai.models.generateContent({
