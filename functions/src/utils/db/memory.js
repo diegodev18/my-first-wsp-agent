@@ -1,4 +1,6 @@
 import { db } from "../../lib/firebase.js";
+import { promptNewMemory } from "../llm/prompt.js";
+import { get as askToLlm } from "../llm/content.js";
 
 export const get = async (waId) => {
     const collection = db.collection("memory");
@@ -18,8 +20,15 @@ export const get = async (waId) => {
     }
 };
 
-export const add = async (waId, newMemory) => {
+export const add = async (waId, userPrompt) => {
     const collection = db.collection("memory");
+
+    const currentMemory = await get(waId);
+    const newMemory = await askToLlm(promptNewMemory(userPrompt), currentMemory);
+
+    if (!newMemory || !newMemory.text || newMemory.text === "none") {
+        return;
+    }
 
     const docRef = collection.doc(waId);
     if (!docRef) {
