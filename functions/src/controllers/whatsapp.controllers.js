@@ -5,7 +5,7 @@ export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
 
     if (mode && challenge && verifyToken === WHATSAPP_VERIFY_TOKEN) {
-        console.log("Webhook verified");
+        req.log.info("Webhook verified");
         return res.status(200).send(challenge);
     }
 
@@ -13,7 +13,7 @@ export const getWebhook = (req, res) => {
 };
 
 export const postWebhook = (req, res) => {
-    console.log("Webhook received:", JSON.stringify(req.body, null, 2));
+    req.log.info("Webhook received:", JSON.stringify(req.body, null, 2));
 
     const msg = req.body.entry[0].changes[0].value.messages[0];
     if (msg && msg.type === "text" && msg.from) {
