@@ -1,5 +1,5 @@
 import * as v2 from "firebase-functions/v2";
-import app from "./src/app";
+import app from "./src/app.js";
 
 v2.setGlobalOptions({ maxInstances: 10 });
 
