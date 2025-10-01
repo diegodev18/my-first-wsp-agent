@@ -1,5 +1,6 @@
 import { ai } from "../../lib/llm.js"
 import { GEMINI_MODEL } from "../../config.js";
+import { promptTemplate } from "./prompt.js";
 
 export const get = async (prompt) => {
     if (!prompt || typeof prompt !== "string" || prompt.trim() === "") {
@@ -9,7 +10,7 @@ export const get = async (prompt) => {
     try {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
-            contents: `${prompt}. Que la respuesta sea breve y concisa, no exceda los 500 caracteres.`,
+            contents: promptTemplate(prompt),
             config: {
                 maxOutputTokens: 100,
                 temperature: 0.5,
