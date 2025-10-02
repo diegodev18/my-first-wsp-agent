@@ -78,7 +78,18 @@ export const promptNewMemory = (userMessage, userMemory) => {
 Esto es lo que ya sabes sobre el usuario: ${userMemory}.
 Este es el mensaje del usuario: "${userMessage}".
 
-En el mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?. Recuerda este detalle importante. Si no hay nada que recordar, responde unicamente un "${noMemoryResponse}", y si hay algo que recordar, por favor compártelo. Es muy importante que sigas estas instrucciones. Usa el siguiente formato: "El usuario es de Mexico, tiene 18 años, nacio en Tabasco. El usuario desarrolló una nueva habilidad en programación. El usuario le gusta programar en Python, JavaScript y C++.". Solo comenta lo que hay que agregar y no existe dentro de lo que ya sabes.`;
+En el mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?.
+Si no hay nada que recordar, responde unicamente un "${noMemoryResponse}", y si hay algo que recordar, por favor compártelo.
+
+Es muy importante que sigas estas instrucciones: 
+- Usa el siguiente formato: "El usuario es de Mexico, tiene 18 años. El usuario nacio en Tabasco. El usuario desarrolló una nueva habilidad en programación. El perro del usuario se llama Duke".
+- No repitas nada que ya sepas.
+- Razona sobre si lo que debes recordas es especificamente informacion del usuario, y no sobre temas generales o de cultura popular. Por ejemplo, si te dice que le des informacion sobre un tema, no lo incluyas en la memoria.
+- Si el mensaje incluye alguna informacion personal del usuario, como su nombre, edad, ubicacion, intereses, nivel de experiencia, etc., asegurate de incluirla en la memoria.
+- Si el mensaje corrije informacion que ya sabes, asegurate de responder dejando en claro que es una correccion. Por ejemplo, si sabes que el usuario tiene 25 años y te dice que en realidad tiene 26, responde "El usuario tiene 26 años, no 25".
+- No incluyas citas textuales del mensaje del usuario, solo la informacion relevante.
+
+Recuerda, si no hay nada que recordar, responde unicamente un "${noMemoryResponse}". Ninguna otra cosa.`;
 }
 
 export const promptRules = (userMessage) => {
