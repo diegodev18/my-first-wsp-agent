@@ -14,7 +14,7 @@ Extrae la informacion en formato JSON con las siguientes claves:
 - repo: el nombre del repositorio (obligatorio si type es "repository" o "file", null en otro caso).
 - filePath: la ruta del archivo dentro del repositorio (obligatorio si type es "file", null en otro caso).
 
-Si el usuario no proporciona suficiente informacion para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
+Si el usuario no proporciona suficiente informacion y tu no puedes inferirla para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
 
 Ejemplos:
 Usuario: "Dime sobre el repositorio facebook/react"
