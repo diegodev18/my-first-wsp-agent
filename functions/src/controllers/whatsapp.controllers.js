@@ -1,5 +1,5 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
-import { send as sendMessage } from "../utils/whatsapp/message.js";
+import { fetchPost as fetchPostWhatsapp } from "../utils/whatsapp/api.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/llm/repository.js";
 import { get as askToLlm } from "../utils/llm/content.js";
@@ -56,7 +56,7 @@ export const postWebhook = async (req, res) => {
                 body: answer
             }
         };
-        sendMessage(msg.from, payload);
+        fetchPostWhatsapp(msg.from, payload);
     }
 
     return res.status(200).end();

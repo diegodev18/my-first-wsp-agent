@@ -1,6 +1,6 @@
 import { WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID } from "../../config.js";
 
-export const send = async (phoneNumber, payload) => {
+export const fetchPost = async (phoneNumber, payload) => {
     const response = await fetch(`https://graph.facebook.com/v22.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`, {
         body: JSON.stringify({
             messaging_product: "whatsapp",
@@ -16,7 +16,7 @@ export const send = async (phoneNumber, payload) => {
     const data = await response.json();
 
     if (!response.ok) {
-        console.error("Error sending message:", data);
+        console.error("Error en la API de WhatsApp:", data);
         return null;
     }
     return data;
