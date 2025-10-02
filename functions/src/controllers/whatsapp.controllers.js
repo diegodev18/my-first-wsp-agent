@@ -27,6 +27,8 @@ export const postWebhook = async (req, res) => {
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
 
+        let answer = "Perdon, no pude procesar tu solicitud en este momento.";
+
         const memory = await getMemory(msg.from);
 
         const response = await getParamsFromPrompt(msg.text.body, memory);
@@ -36,8 +38,6 @@ export const postWebhook = async (req, res) => {
         if (!response) {
             req.log.error("No response from LLM or response is invalid");
         }
-
-        const answer = "Hola Mundo!";
 
         const payload = {
             type: "text",
