@@ -54,6 +54,16 @@ Responde a la pregunta del usuario basandote en la informacion del repositorio. 
 Dame la respuesta en formato texto, sin explicaciones adicionales.`;
 }
 
+export const promptFileInfo = (userPrompt, sanitizedData) => {
+    return `
+Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
+
+El usuario pregunta: ${userPrompt}
+El archivo tiene la siguiente informacion: ${JSON.stringify(sanitizedData)}
+
+Responde a la pregunta del usuario basandote en la informacion del archivo. Si no puedes responder a la pregunta con la informacion del archivo, responde "No puedo responder a esa pregunta con la informacion disponible del archivo.".`;
+}
+
 export const promptNewMemory = (userMessage, userMemory) => {
     const noMemoryResponse = "none";
     return `\
