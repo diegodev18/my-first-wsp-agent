@@ -16,7 +16,7 @@ Extrae la informacion en formato JSON con las siguientes claves:
 - repo: el nombre del repositorio (obligatorio si type es "repository" o "file", null en otro caso).
 - filePath: la ruta del archivo dentro del repositorio (obligatorio si type es "file", null en otro caso).
 
-Si el usuario no proporciona suficiente informacion y tu no puedes inferirla para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
+Si el usuario no proporciona suficiente informacion, intenta inferirla con una busqueda, y si no lo logras para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
 
 Ejemplos:
 Usuario: "Dime sobre el repositorio facebook/react"
@@ -63,7 +63,11 @@ Dame la respuesta solo en formato JSON, sin explicaciones adicionales.
 export const getRepositoryInfo = async (userPrompt, userMemory, owner, repo, authToken) => {
     const data = await getRepositoryData(owner, repo, authToken);
 
-    if (!data) return null;
+    if (!data) {
+        return {
+            text: "No se pudo obtener la información del repositorio en este momento."
+        }
+    };
 
     if (data.status === 404 || data.status === "404") {
         return {
@@ -108,13 +112,23 @@ Responde a la pregunta del usuario basandote en la informacion del repositorio. 
 Dame la respuesta en formato texto, sin explicaciones adicionales.
 `, userMemory);
 
+    if (!response) {
+        return {
+            text: "No se pudo procesar la solicitud en este momento."
+        }
+    }
+
     return response;
 }
 
 export const getFileInfo = async (userPrompt, userMemory, owner, repo, filePath, authToken) => {
     const data = await getFileData(owner, repo, filePath, authToken);
 
-    if (!data) return null;
+    if (!data) {
+        return {
+            text: "No se pudo obtener la información del archivo en este momento."
+        };
+    }
 
     if (data.status === 404 || data.status === "404") {
         return {
@@ -131,6 +145,12 @@ El usuario pregunta: ${userPrompt}
 El archivo tiene la siguiente informacion: ${JSON.stringify(sanitizedData)}
 
 Responde a la pregunta del usuario basandote en la informacion del archivo. Si no puedes responder a la pregunta con la informacion del archivo, responde "No puedo responder a esa pregunta con la informacion disponible del archivo.".`);
+
+    if (!response) {
+        return {
+            text: "No se pudo procesar la solicitud en este momento."
+        }
+    }
 
     return response;
 }
