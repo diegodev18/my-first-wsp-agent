@@ -3,6 +3,7 @@ import { send as sendMessage } from "../utils/whatsapp/message.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/llm/repository.js";
 import { get as askToLlm } from "../utils/llm/content.js";
+import { generalPrompt } from "../utils/llm/prompt.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -40,7 +41,7 @@ export const postWebhook = async (req, res) => {
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
         } else if (response.type === "general") {
-            answer = (await askToLlm(msg.text.body, memory)).text;
+            answer = (await askToLlm(generalPrompt(msg.text.body, memory))).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
             answer = (await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {

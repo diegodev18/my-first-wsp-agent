@@ -1,4 +1,12 @@
 
+export const generalPrompt = (userMessage, userMemory) => {
+    return `\
+Eres un asistente que responde a preguntas de manera concisa y clara.
+
+Pregunta del usuario: "${userMessage}"
+Ten en cuenta lo siguiente sobre el usuario: "${userMemory}". Se lo mas personalizado posible.`;
+}
+
 export const promptParams = (userMessage, userMemory) => {
     return `\
 Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
