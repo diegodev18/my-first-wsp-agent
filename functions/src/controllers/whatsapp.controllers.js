@@ -39,6 +39,10 @@ export const postWebhook = async (req, res) => {
             req.log.error("No response from LLM or response is invalid");
         } else if (response.type === "general") {
             answer = response.reason || answer;
+        } else if (response.type === "repository") {
+            answer = `Parece que quieres información sobre el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con repositorios. ¿En qué más puedo ayudarte?`;
+        } else if (response.type === "file") {
+            answer = `Parece que quieres información sobre el archivo ${response.filePath} en el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con archivos en repositorios. ¿En qué más puedo ayudarte?`;
         }
 
         const payload = {
