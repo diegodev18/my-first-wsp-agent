@@ -7,7 +7,7 @@ export const get = async (waId) => {
 
     const docRef = collection.doc(waId);
     if (!docRef) {
-        collection.add({ waId, memory: "" });
+        await collection.add({ waId, memory: "" });
         return "";
     }
 
@@ -15,7 +15,7 @@ export const get = async (waId) => {
     if (doc.exists) {
         return doc.data().memory || "";
     } else {
-        docRef.set({ memory: "" });
+        await docRef.set({ memory: "" });
         return "";
     }
 };
@@ -32,7 +32,7 @@ export const add = async (waId, userPrompt) => {
 
     const docRef = collection.doc(waId);
     if (!docRef) {
-        collection.add({ waId, memory: newMemory.text });
+        await collection.add({ waId, memory: newMemory.text });
         return;
     }
 
