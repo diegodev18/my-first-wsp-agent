@@ -110,6 +110,12 @@ export const getFileInfo = async (userPrompt, userMemory, owner, repo, filePath,
 
     if (!data) return null;
 
+    if (data.status === 404 || data.status === "404") {
+        return {
+            text: `No se encontró el archivo ${filePath} en el repositorio ${owner}/${repo}.`
+        };
+    }
+
     const sanitizedData = { ...data }
 
     const response = await askToLlm(`
