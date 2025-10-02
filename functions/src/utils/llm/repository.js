@@ -3,13 +3,7 @@ import { get as askToLlm } from "./content";
 /**
  * @param {string} prompt 
  * @param {string} userMemory 
- * @returns {Promise<null | {
- * type: string, 
- * owner: string | null,
- * repo: string | null,
- * filePath: string | null,
- * reason?: string
- * }>}
+ * @returns
  */
 export const getParamsFromPrompt = async (prompt, userMemory) => {
     const llmResponse = await askToLlm(`\
@@ -42,6 +36,15 @@ Respuesta en JSON.
 `, userMemory);
 
     try {
+        /**
+         * @type {{
+         * type: string, 
+         * owner: string | null,
+         * repo: string | null,
+         * filePath: string | null,
+         * reason?: string
+         * }}
+         */
         const params = JSON.parse(llmResponse.text);
 
         if (!params.type) return null;
