@@ -17,6 +17,7 @@ export const get = async (userPrompt, userMemory) => {
         });
         return response;
     } catch (err) {
+        console.error("Error calling LLM:", err);
         return null;
     }
 
