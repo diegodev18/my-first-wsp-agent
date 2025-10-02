@@ -40,7 +40,7 @@ export const postWebhook = async (req, res) => {
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
         } else if (response.type) {
-            answer = await askToLlm(msg.text.body, memory);
+            answer = (await askToLlm(msg.text.body, memory)).text;
         } else if (response.type === "repository") {
             answer = `Parece que quieres información sobre el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con repositorios. ¿En qué más puedo ayudarte?`;
         } else if (response.type === "file") {
