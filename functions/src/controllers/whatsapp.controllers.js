@@ -29,7 +29,7 @@ export const postWebhook = async (req, res) => {
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
 
-        await handleTypingIndicator(msg.from, true);
+        await handleTypingIndicator(msg.from, msg.id);
 
         let answer = "Perdon, no pude procesar tu solicitud en este momento.";
 
@@ -60,8 +60,6 @@ export const postWebhook = async (req, res) => {
             }
         };
         fetchPostWhatsapp(msg.from, payload);
-
-        await handleTypingIndicator(msg.from, false);
     }
 
     return res.status(200).end();
