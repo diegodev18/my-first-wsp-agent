@@ -1,7 +1,7 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
-import { getParamsFromPrompt } from "../utils/llm/repository.js";
+import { getParamsFromPrompt, getRepositoryInfo } from "../utils/llm/repository.js";
 import { get as askToLlm } from "../utils/llm/content.js";
 
 export const getWebhook = (req, res) => {
@@ -41,8 +41,8 @@ export const postWebhook = async (req, res) => {
             answer = response.reason;
         } else if (response.type === "general") {
             answer = (await askToLlm(msg.text.body, memory)).text;
-        } else if (response.type === "repository") {
-            answer = `Parece que quieres información sobre el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con repositorios. ¿En qué más puedo ayudarte?`;
+        } else if (response.type === "repository" && response.owner && response.repo) {
+            answer = (await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {
             answer = `Parece que quieres información sobre el archivo ${response.filePath} en el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con archivos en repositorios. ¿En qué más puedo ayudarte?`;
         } else {
