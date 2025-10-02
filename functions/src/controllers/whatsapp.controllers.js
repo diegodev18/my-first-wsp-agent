@@ -37,6 +37,8 @@ export const postWebhook = async (req, res) => {
 
         if (!response) {
             req.log.error("No response from LLM or response is invalid");
+        } else if (response.type === "general") {
+            answer = response.reason || answer;
         }
 
         const payload = {
