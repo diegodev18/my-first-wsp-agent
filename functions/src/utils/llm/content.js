@@ -1,8 +1,8 @@
 import { ai } from "../../lib/llm.js"
 import { GEMINI_MODEL } from "../../config.js";
-import { promptTemplate } from "./prompt.js";
+import { promptRules } from "./prompt.js";
 
-export const get = async (userPrompt, userMemory) => {
+export const get = async (userPrompt) => {
     if (!userPrompt || typeof userPrompt !== "string" || userPrompt.trim() === "") {
         return null;
     }
@@ -10,7 +10,7 @@ export const get = async (userPrompt, userMemory) => {
     try {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
-            contents: promptTemplate(userPrompt, userMemory),
+            contents: promptRules(userPrompt),
         });
         return response;
     } catch (err) {
