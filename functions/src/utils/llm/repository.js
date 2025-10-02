@@ -9,7 +9,7 @@ import { promptParams, promptRepositoryInfo, promptFileInfo } from "./prompt.js"
  * @returns
  */
 export const getParamsFromPrompt = async (prompt, userMemory) => {
-    const llmResponse = await askToLlm(promptParams(prompt), userMemory);
+    const llmResponse = await askToLlm(promptParams(prompt, userMemory));
 
     try {
         const llmResponseJson = llmResponse.text.trim().replace(/^\s*```json\s*/, "").replace(/\s*```\s*$/, "");
@@ -74,7 +74,7 @@ export const getRepositoryInfo = async (userPrompt, userMemory, owner, repo, aut
         labels_url: undefined,
     }
 
-    const response = await askToLlm(promptRepositoryInfo(userPrompt, sanitizedData), userMemory);
+    const response = await askToLlm(promptRepositoryInfo(userPrompt, sanitizedData, userMemory));
 
     if (!response) {
         return {
@@ -102,7 +102,7 @@ export const getFileInfo = async (userPrompt, userMemory, owner, repo, filePath,
 
     const sanitizedData = { ...data }
 
-    const response = await askToLlm(promptFileInfo(userPrompt, sanitizedData), userMemory);
+    const response = await askToLlm(promptFileInfo(userPrompt, JSON.stringify(sanitizedData), userMemory));
 
     if (!response) {
         return {
