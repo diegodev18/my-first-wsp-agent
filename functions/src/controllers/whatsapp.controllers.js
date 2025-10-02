@@ -1,7 +1,8 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
-import { get as askToLlm } from "../utils/llm/content.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
+import { getParamsFromPrompt } from "../utils/llm/repository.js";
+import { get as askToLlm } from "../utils/llm/content.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -26,22 +27,32 @@ export const postWebhook = async (req, res) => {
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
 
+        let answer = "Perdon, no pude procesar tu solicitud en este momento.";
+
         const memory = await getMemory(msg.from);
 
-        const response = await askToLlm(msg.text.body, memory);
+        const response = await getParamsFromPrompt(msg.text.body, memory);
 
         addMemory(msg.from, msg.text.body);
 
-        if (!response || !response.text) {
+        if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
+        } else if (response.type === "general" && response.reason) {
+            answer = response.reason;
+        } else if (response.type === "general") {
+            answer = (await askToLlm(msg.text.body, memory)).text;
+        } else if (response.type === "repository") {
+            answer = `Parece que quieres información sobre el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con repositorios. ¿En qué más puedo ayudarte?`;
+        } else if (response.type === "file") {
+            answer = `Parece que quieres información sobre el archivo ${response.filePath} en el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con archivos en repositorios. ¿En qué más puedo ayudarte?`;
+        } else {
+            req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
 
         const payload = {
             type: "text",
             text: {
-                body: response && response.text ?
-                    response.text :
-                    "Lo siento, no puedo procesar tu solicitud en este momento.",
+                body: answer
             }
         };
         sendMessage(msg.from, payload);

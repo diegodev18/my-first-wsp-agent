@@ -1,4 +1,4 @@
-import { fetchData as fetchGithubData } from "./api";
+import { fetchData as fetchGithubData } from "./api.js";
 
 export const getData = async (owner, repositoryName, authToken) => {
     const url = `https://api.github.com/repos/${owner}/${repositoryName}`;
