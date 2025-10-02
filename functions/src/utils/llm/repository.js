@@ -10,6 +10,24 @@ Extrae la informacion en formato JSON con las siguientes claves:
 - filePath: la ruta del archivo dentro del repositorio (obligatorio si type es "file", null en otro caso).
 
 Si el usuario no proporciona suficiente informacion para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
+
+Ejemplos:
+Usuario: "Dime sobre el repositorio facebook/react"
+Respuesta: {"type": "repository", "owner": "facebook", "repo": "react", "filePath": null}
+
+Usuario: "Muéstrame el código del archivo src/app.js del repo microsoft/vscode"
+Respuesta: {"type": "file", "owner": "microsoft", "repo": "vscode", "filePath": "src/app.js"}
+
+Usuario: "Hola, ¿cómo estás?"
+Respuesta: {"type": "general", "owner": null, "repo": null, "filePath": null}
+
+Usuario: "Háblame del repositorio vuejs"
+Respuesta: {"type": "general", "owner": null, "repo": null, "filePath": null, "reason": "Falta el propietario del repositorio"}
+
+Ahora responde a la siguiente pregunta del usuario:
+
+Pregunta: "${prompt}"
+Respuesta en JSON.
 `, userMemory);
 
     try {
