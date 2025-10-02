@@ -1,6 +1,5 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
-import { get as askToLlm } from "../utils/llm/content.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt } from "../utils/llm/repository.js";
 

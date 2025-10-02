@@ -1,4 +1,4 @@
-import { get as askToLlm } from "./content";
+import { get as askToLlm } from "./content.js";
 
 /**
  * @param {string} prompt 
