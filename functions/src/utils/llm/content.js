@@ -22,6 +22,13 @@ export const get = async (userPrompt, history = []) => {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
             contents: contents,
+            generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 500,
+                topK: 40,
+                topP: 0.9,
+                candidateCount: 1,
+            }
         });
         return response;
     } catch (err) {
