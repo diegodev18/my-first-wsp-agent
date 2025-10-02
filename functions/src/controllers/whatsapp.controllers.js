@@ -4,6 +4,7 @@ import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/llm/repository.js";
 import { get as askToLlm } from "../utils/llm/content.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
+import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -27,6 +28,8 @@ export const postWebhook = async (req, res) => {
 
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
+
+        await handleTypingIndicator(msg.from, true);
 
         let answer = "Perdon, no pude procesar tu solicitud en este momento.";
 
@@ -57,6 +60,8 @@ export const postWebhook = async (req, res) => {
             }
         };
         fetchPostWhatsapp(msg.from, payload);
+
+        await handleTypingIndicator(msg.from, false);
     }
 
     return res.status(200).end();
