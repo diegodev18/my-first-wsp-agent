@@ -25,6 +25,12 @@ Respuesta: {"type": "repository", "owner": "facebook", "repo": "react", "filePat
 Usuario: "Muéstrame el código del archivo src/app.js del repo microsoft/vscode"
 Respuesta: {"type": "file", "owner": "microsoft", "repo": "vscode", "filePath": "src/app.js"}
 
+Usuario: "Dame informacion sobre el repo de Linux"
+Respuesta: {"type": "repository", "owner": "torvalds", "repo": "linux", "filePath": null}
+
+Usuario: "Dame el codigo del archivo ignore de git del repo react"
+Respuesta: {"type": "file", "owner": "facebook", "repo": "react", "filePath": ".gitignore"}
+
 Usuario: "Hola, ¿cómo estás?"
 Respuesta: {"type": "general", "owner": null, "repo": null, "filePath": null}
 
