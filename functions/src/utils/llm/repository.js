@@ -65,6 +65,12 @@ export const getRepositoryInfo = async (userPrompt, userMemory, owner, repo, aut
 
     if (!data) return null;
 
+    if (data.status === 404 || data.status === "404") {
+        return {
+            text: `No se encontró el repositorio ${owner}/${repo}.`
+        };
+    }
+
     const sanitizedData = {
         ...data,
         forks_url: undefined,
