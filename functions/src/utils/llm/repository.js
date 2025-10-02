@@ -1,5 +1,16 @@
 import { get as askToLlm } from "./content";
 
+/**
+ * @param {string} prompt 
+ * @param {string} userMemory 
+ * @returns {Promise<null | {
+ * type: string, 
+ * owner: string | null,
+ * repo: string | null,
+ * filePath: string | null,
+ * reason?: string
+ * }>}
+ */
 export const getParamsFromPrompt = async (prompt, userMemory) => {
     const llmResponse = await askToLlm(`\
 Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
