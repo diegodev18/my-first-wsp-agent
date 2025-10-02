@@ -4,7 +4,9 @@ export const generalPrompt = (userMessage, userMemory) => {
 Eres un asistente que responde a preguntas de manera concisa y clara.
 
 Pregunta del usuario: "${userMessage}"
-Ten en cuenta lo siguiente sobre el usuario: "${userMemory}". Se lo mas personalizado posible.`;
+Ten en cuenta lo siguiente sobre el usuario: "${userMemory}". Se lo mas personalizado posible.
+
+Responde a la pregunta del usuario en formato de mensaje de WhatsApp, agregando emojis y un tono casual, sin explicaciones adicionales.`;
 }
 
 export const promptParams = (userMessage, userMemory) => {
