@@ -36,12 +36,13 @@ Pregunta: "${userMessage}"
 Dame la respuesta solo en formato JSON, sin explicaciones adicionales.`;
 }
 
-export const promptRepositoryInfo = (userPrompt, sanitizedData) => {
+export const promptRepositoryInfo = (userPrompt, sanitizedData, userMemory) => {
     return `
 Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
 
 El repositorio tiene la siguiente informacion: ${JSON.stringify(sanitizedData)}
 El usuario pregunta: ${userPrompt}
+Ten en cuenta lo siguiente sobre el usuario: ${userMemory}
 
 Responde a la pregunta del usuario basandote en la informacion del repositorio. Si no puedes responder a la pregunta con la informacion del repositorio, responde "No puedo responder a esa pregunta con la informacion disponible del repositorio.".
 
@@ -63,8 +64,8 @@ export const promptNewMemory = (userMessage, userMemory) => {
     return `\
 Esto es lo que ya sabes sobre el usuario: ${userMemory}.
 Este es el mensaje del usuario: "${userMessage}".
-En el siguiente mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?. Recuerda este detalle importante. Si no hay nada que recordar, responde unicamente un "${noMemoryResponse}", y si hay algo que recordar, por favor compártelo. Es muy importante que sigas estas instrucciones. Usa el siguiente formato: "El usuario es de Mexico, tiene 18 años, nacio en Tabasco. El usuario desarrolló una nueva habilidad en programación. El usuario le gusta programar en Python, JavaScript y C++."\
-`;
+
+En el mensaje, ¿Hay algo que debas recordar para futuras conversaciones y no este en tu memoria?. Recuerda este detalle importante. Si no hay nada que recordar, responde unicamente un "${noMemoryResponse}", y si hay algo que recordar, por favor compártelo. Es muy importante que sigas estas instrucciones. Usa el siguiente formato: "El usuario es de Mexico, tiene 18 años, nacio en Tabasco. El usuario desarrolló una nueva habilidad en programación. El usuario le gusta programar en Python, JavaScript y C++.". Solo comenta lo que hay que agregar y no existe dentro de lo que ya sabes.`;
 }
 
 export const promptRules = (userMessage) => {
