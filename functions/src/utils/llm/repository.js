@@ -32,7 +32,7 @@ Respuesta: {"type": "general", "owner": null, "repo": null, "filePath": null, "r
 Ahora responde a la siguiente pregunta del usuario:
 
 Pregunta: "${prompt}"
-Respuesta en JSON.
+Dame la respuesta en texto plano en formato JSON sin ningun otro texto o explicacion.
 `, userMemory);
 
     try {
@@ -47,10 +47,10 @@ Respuesta en JSON.
          */
         const params = JSON.parse(llmResponse.text);
 
-        if (!params.type) return null;
-
         return params;
     } catch (_) {
+        console.error("Error parsing LLM response:", llmResponse.text);
+
         return null;
     }
 }

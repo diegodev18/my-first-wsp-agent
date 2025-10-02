@@ -34,7 +34,7 @@ export const postWebhook = async (req, res) => {
 
         addMemory(msg.from, msg.text.body);
 
-        if (!response) {
+        if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
