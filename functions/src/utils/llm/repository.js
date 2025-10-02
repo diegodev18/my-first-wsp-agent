@@ -101,5 +101,5 @@ Responde a la pregunta del usuario basandote en la informacion del repositorio. 
 Dame la respuesta en formato texto, sin explicaciones adicionales.
 `, userMemory);
 
-    return response.text;
+    return response;
 }

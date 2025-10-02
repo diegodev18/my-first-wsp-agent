@@ -42,7 +42,7 @@ export const postWebhook = async (req, res) => {
         } else if (response.type === "general") {
             answer = (await askToLlm(msg.text.body, memory)).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
-            answer = await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo);
+            answer = (await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {
             answer = `Parece que quieres información sobre el archivo ${response.filePath} en el repositorio ${response.owner}/${response.repo}. Actualmente, no puedo acceder a datos en tiempo real, pero puedo ayudarte con preguntas generales sobre GitHub o cómo trabajar con archivos en repositorios. ¿En qué más puedo ayudarte?`;
         } else {
