@@ -24,7 +24,7 @@ export const add = async (waId, userPrompt) => {
     const collection = db.collection("memory");
 
     const currentMemory = await get(waId);
-    const newMemory = await askToLlm(promptNewMemory(userPrompt), currentMemory);
+    const newMemory = await askToLlm(promptNewMemory(userPrompt, currentMemory));
 
     if (!newMemory || !newMemory.text || newMemory.text === "none") {
         return;
