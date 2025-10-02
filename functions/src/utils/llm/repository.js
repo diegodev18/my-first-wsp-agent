@@ -1,7 +1,7 @@
 import { get as askToLlm } from "./content.js";
 import { getData as getRepositoryData } from "../github/repository.js";
 import { getData as getFileData } from "../github/file.js";
-import { promptParams } from "./prompt.js";
+import { promptParams, promptRepositoryInfo } from "./prompt.js";
 
 /**
  * @param {string} prompt 
@@ -74,16 +74,7 @@ export const getRepositoryInfo = async (userPrompt, userMemory, owner, repo, aut
         labels_url: undefined,
     }
 
-    const response = await askToLlm(`
-Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
-
-El repositorio tiene la siguiente informacion: ${JSON.stringify(sanitizedData)}
-El usuario pregunta: ${userPrompt}
-
-Responde a la pregunta del usuario basandote en la informacion del repositorio. Si no puedes responder a la pregunta con la informacion del repositorio, responde "No puedo responder a esa pregunta con la informacion disponible del repositorio.".
-
-Dame la respuesta en formato texto, sin explicaciones adicionales.
-`, userMemory);
+    const response = await askToLlm(promptRepositoryInfo(userPrompt, sanitizedData), userMemory);
 
     if (!response) {
         return {
