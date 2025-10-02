@@ -1,4 +1,4 @@
-import { fetchPost as fetchPostWhatsapp } from "./api";
+import { fetchPost as fetchPostWhatsapp } from "./api.js";
 
 export const handleTypingIndicator = async (phoneNumber, isTyping) => {
     const payload = {
