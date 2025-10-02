@@ -1,5 +1,5 @@
 
-export const promptParams = (userMessage) => {
+export const promptParams = (userMessage, userMemory) => {
     return `\
 Eres un asistente que extrae informacion sobre codigo de repositorios de GitHub, y puedes responder a preguntas sobre el codigo de un repositorio de GitHub o archivos especificos del repostorio.
 Extrae la informacion en formato JSON con las siguientes claves:
@@ -7,6 +7,8 @@ Extrae la informacion en formato JSON con las siguientes claves:
 - owner: el propietario del repositorio (obligatorio si type es "repository" o "file", null en otro caso).
 - repo: el nombre del repositorio (obligatorio si type es "repository" o "file", null en otro caso).
 - filePath: la ruta del archivo dentro del repositorio (obligatorio si type es "file", null en otro caso).
+
+Ten en cuenta lo siguiente sobre el usuario: "${userMemory}". Puedes usar esta informacion para inferir detalles como su ubicacion, intereses, nivel de experiencia, etc., y asi ayudarte a completar los campos obligatorios.
 
 Si el usuario no proporciona suficiente informacion, intenta inferirla con una busqueda, y si no lo logras para completar los campos obligatorios, asigna el type a "general" y agrega un campo adicional "reason" explicando que informacion falta.
 
