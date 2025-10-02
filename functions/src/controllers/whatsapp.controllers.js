@@ -2,6 +2,7 @@ import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { send as sendMessage } from "../utils/whatsapp/message.js";
 import { get as askToLlm } from "../utils/llm/content.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
+import { getParamsFromPrompt } from "../utils/llm/repository.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -28,20 +29,20 @@ export const postWebhook = async (req, res) => {
 
         const memory = await getMemory(msg.from);
 
-        const response = await askToLlm(msg.text.body, memory);
+        const response = await getParamsFromPrompt(msg.text.body, memory);
 
         addMemory(msg.from, msg.text.body);
 
-        if (!response || !response.text) {
+        if (!response) {
             req.log.error("No response from LLM or response is invalid");
         }
+
+        const answer = "Hola Mundo!";
 
         const payload = {
             type: "text",
             text: {
-                body: response && response.text ?
-                    response.text :
-                    "Lo siento, no puedo procesar tu solicitud en este momento.",
+                body: answer
             }
         };
         sendMessage(msg.from, payload);
