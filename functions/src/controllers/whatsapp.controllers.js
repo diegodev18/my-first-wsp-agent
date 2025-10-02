@@ -1,9 +1,10 @@
 import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
-import { send as sendMessage } from "../utils/whatsapp/message.js";
+import { fetchPost as fetchPostWhatsapp } from "../utils/whatsapp/api.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/llm/repository.js";
 import { get as askToLlm } from "../utils/llm/content.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
+import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -27,6 +28,8 @@ export const postWebhook = async (req, res) => {
 
     if (msg && msg.type === "text" && msg.from && msg.text) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
+
+        await handleTypingIndicator(msg.from, msg.id);
 
         let answer = "Perdon, no pude procesar tu solicitud en este momento.";
 
@@ -56,7 +59,7 @@ export const postWebhook = async (req, res) => {
                 body: answer
             }
         };
-        sendMessage(msg.from, payload);
+        fetchPostWhatsapp(msg.from, payload);
     }
 
     return res.status(200).end();
