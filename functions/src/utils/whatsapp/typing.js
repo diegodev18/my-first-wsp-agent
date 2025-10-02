@@ -1,9 +1,12 @@
 import { fetchPost as fetchPostWhatsapp } from "./api.js";
 
-export const handleTypingIndicator = async (phoneNumber, isTyping) => {
+export const handleTypingIndicator = async (phoneNumber, messageId) => {
     const payload = {
-        type: "typing",
-        typing: isTyping ? "on" : "off"
+        status: "read",
+        message_id: messageId,
+        typing_indicator: {
+            type: "text",
+        }
     };
     const response = await fetchPostWhatsapp(phoneNumber, payload);
     if (!response) {
