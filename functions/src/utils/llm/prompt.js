@@ -56,7 +56,7 @@ Ten en cuenta lo siguiente sobre el usuario: ${userMemory}
 
 Responde a la pregunta del usuario basandote en la informacion del repositorio. Si no puedes responder a la pregunta con la informacion del repositorio, responde "No puedo responder a esa pregunta con la informacion disponible del repositorio.".
 
-Dame la respuesta en formato texto, sin explicaciones adicionales.`;
+Dame el texto en formato de mensaje de WhatsApp, agregando emojis y un tono casual, sin explicaciones adicionales.`;
 }
 
 export const promptFileInfo = (userPrompt, sanitizedData, userMemory) => {
@@ -67,7 +67,9 @@ El usuario pregunta: "${userPrompt}"
 El archivo tiene la siguiente informacion: "${sanitizedData}"
 Ten en cuenta lo siguiente sobre el usuario: "${userMemory}"
 
-Responde a la pregunta del usuario basandote en la informacion del archivo. Si no puedes responder a la pregunta con la informacion del archivo, responde "No puedo responder a esa pregunta con la informacion disponible del archivo.".`;
+Responde a la pregunta del usuario basandote en la informacion del archivo. Si no puedes responder a la pregunta con la informacion del archivo, responde "No puedo responder a esa pregunta con la informacion disponible del archivo.".
+
+Dame el texto en formato de mensaje de WhatsApp, agregando emojis y un tono casual, sin explicaciones adicionales.`;
 }
 
 export const promptNewMemory = (userMessage, userMemory) => {
