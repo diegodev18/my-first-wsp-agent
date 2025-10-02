@@ -32,10 +32,13 @@ Respuesta: {"type": "general", "owner": null, "repo": null, "filePath": null, "r
 Ahora responde a la siguiente pregunta del usuario:
 
 Pregunta: "${prompt}"
-Dame la respuesta en texto plano en formato JSON sin ningun otro texto o explicacion.
+
+Dame la respuesta solo en formato JSON, sin explicaciones adicionales.
 `, userMemory);
 
     try {
+        const llmResponseJson = llmResponse.text.trim().replace(/^\s*```json\s*/, "").replace(/\s*```\s*$/, "");
+
         /**
          * @type {{
          * type: string, 
@@ -45,7 +48,7 @@ Dame la respuesta en texto plano en formato JSON sin ningun otro texto o explica
          * reason?: string
          * }}
          */
-        const params = JSON.parse(llmResponse.text);
+        const params = JSON.parse(llmResponseJson);
 
         return params;
     } catch (_) {
