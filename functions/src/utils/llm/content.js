@@ -11,9 +11,6 @@ export const get = async (userPrompt, userMemory) => {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
             contents: promptTemplate(userPrompt, userMemory),
-            config: {
-                maxOutputTokens: 1024,
-            }
         });
         return response;
     } catch (err) {
