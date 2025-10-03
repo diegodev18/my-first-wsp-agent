@@ -11,10 +11,10 @@ export const downloadAudio = async (mediaId) => {
             "Authorization": `Bearer ${WHATSAPP_ACCESS_TOKEN}`
         }
     });
-    if (!response.ok) return false;
+    if (!response.ok) return null;
 
     const data = await response.json();
-    if (!data || !data.url) return false;
+    if (!data || !data.url) return null;
 
     const timestamp = Date.now().toString();
     const filePath = `/tmp/audio_${timestamp}.ogg`;
@@ -25,7 +25,7 @@ export const downloadAudio = async (mediaId) => {
         },
         output: filePath
     });
-    if (!audioDownloaded.ok) return false;
+    if (!audioDownloaded.ok) return null;
 
-    return true;
+    return filePath;
 }
