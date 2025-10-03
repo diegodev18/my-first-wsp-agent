@@ -5,6 +5,8 @@ import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/ll
 import { get as askToLlm } from "../utils/llm/content.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
+import { get as transcriptAudio } from "../utils/llm/transcript.js";
+import { downloadAudio } from "../utils/whatsapp/audio.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -27,14 +29,24 @@ export const postWebhook = async (req, res) => {
     const msg = messages && messages[0];
 
     if (msg && (msg.type === "text" || msg.type === "audio") && msg.from) {
-        req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
         let userMessage = msg.text.body;
         if (msg.type === "audio") {
-            userMessage = "Audio message received.";
+            const audioFilePath = await downloadAudio(msg.audio.id);
+            if (!audioFilePath) {
+                req.log.error("Failed to download audio file");
+                return res.status(200).end();
+            }
+            userMessage = await transcriptAudio(audioFilePath);
+            if (!userMessage) {
+                req.log.error("Failed to transcribe audio file");
+                return res.status(200).end();
+            }
         } else if (!userMessage) {
             req.log.error("No text body found in the message");
             return res.status(400).end();
         }
+
+        req.log.info(`Message from ${msg.from}: ${userMessage}`);
 
         await handleTypingIndicator(msg.from, msg.id);
 
