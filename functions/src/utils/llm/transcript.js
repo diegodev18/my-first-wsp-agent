@@ -8,10 +8,9 @@ export const get = async (audioFilePath) => {
         const audioFile = fs.readFileSync(audioFilePath);
         if (!audioFile) return null;
 
-        const response = await ai.models.generateContent(
-            [
+        const response = await ai.models.generateContent({
+            contents: [
                 {
-                    role: "user",
                     parts: [
                         { text: "Transcribe este audio en texto en español:" },
                         {
@@ -23,27 +22,12 @@ export const get = async (audioFilePath) => {
                     ],
                 },
             ],
-            {
-                model: GEMINI_MODEL,
-            }
-        );
+            model: GEMINI_MODEL,
+        });
 
-        return response;
+        return response.candidates[0].content.parts[0].text;
     } catch (err) {
         console.error("Error transcribing audio:", err);
         return null;
     }
 };
-
-(async () => {
-    console.log("Starting transcription test...");
-
-    const transcriptText = await get("audio.ogg");
-
-    if (!transcriptText) {
-        console.error("No transcription received");
-        return;
-    }
-
-    console.log("Transcription received:", transcriptText.text);
-})();
