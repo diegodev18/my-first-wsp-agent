@@ -6,7 +6,7 @@ import { get as askToLlm } from "../utils/llm/content.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 import { get as transcriptAudio } from "../utils/llm/transcript.js";
-import { downloadAudio } from "../utils/whatsapp/audio.js";
+import { get as getAudioBase64 } from "../utils/whatsapp/audio.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -33,12 +33,12 @@ export const postWebhook = async (req, res) => {
 
         let userMessage;
         if (msg.type === "audio") {
-            const audioFilePath = await downloadAudio(msg.audio.id);
-            if (!audioFilePath) {
+            const audioData = await getAudioBase64(msg.audio.id);
+            if (!audioData) {
                 req.log.error("Failed to download audio file");
                 return res.status(200).end();
             }
-            userMessage = await transcriptAudio(audioFilePath);
+            userMessage = await transcriptAudio(audioData);
             if (!userMessage) {
                 req.log.error("Failed to transcribe audio file");
                 return res.status(200).end();
