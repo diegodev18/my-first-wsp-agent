@@ -29,6 +29,8 @@ export const postWebhook = async (req, res) => {
     const msg = messages && messages[0];
 
     if (msg && (msg.type === "text" || msg.type === "audio") && msg.from) {
+        await handleTypingIndicator(msg.from, msg.id);
+
         let userMessage = msg.text.body;
         if (msg.type === "audio") {
             const audioFilePath = await downloadAudio(msg.audio.id);
@@ -47,8 +49,6 @@ export const postWebhook = async (req, res) => {
         }
 
         req.log.info(`Message from ${msg.from}: ${userMessage}`);
-
-        await handleTypingIndicator(msg.from, msg.id);
 
         let answer = "Perdon, no pude procesar tu solicitud en este momento.";
 
