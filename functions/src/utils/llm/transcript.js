@@ -1,13 +1,8 @@
-import fs from "fs";
 import { ai } from "../../lib/llm.js";
 import { GEMINI_MODEL } from "../../config.js";
 
-export const get = async (audioFilePath) => {
+export const get = async (audioBase64) => {
     try {
-
-        const audioFile = fs.readFileSync(audioFilePath);
-        if (!audioFile) return null;
-
         const response = await ai.models.generateContent({
             contents: [
                 {
@@ -16,7 +11,7 @@ export const get = async (audioFilePath) => {
                         {
                             inlineData: {
                                 mimeType: "audio/ogg",
-                                data: audioFile.toString("base64"),
+                                data: audioBase64,
                             },
                         },
                     ],
