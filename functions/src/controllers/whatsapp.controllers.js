@@ -26,8 +26,15 @@ export const postWebhook = async (req, res) => {
     const messages = value && value.messages;
     const msg = messages && messages[0];
 
-    if (msg && msg.type === "text" && msg.from && msg.text) {
+    if (msg && (msg.type === "text" || msg.type === "audio") && msg.from) {
         req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
+        let userMessage = msg.text.body;
+        if (msg.type === "audio") {
+            userMessage = "Audio message received.";
+        } else if (!userMessage) {
+            req.log.error("No text body found in the message");
+            return res.status(400).end();
+        }
 
         await handleTypingIndicator(msg.from, msg.id);
 
@@ -35,20 +42,20 @@ export const postWebhook = async (req, res) => {
 
         const memory = await getMemory(msg.from);
 
-        const response = await getParamsFromPrompt(msg.text.body, memory);
+        const response = await getParamsFromPrompt(userMessage, memory);
 
-        addMemory(msg.from, msg.text.body);
+        addMemory(msg.from, userMessage);
 
         if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
         } else if (response.type === "general") {
-            answer = (await askToLlm(generalPrompt(msg.text.body, memory))).text;
+            answer = (await askToLlm(generalPrompt(userMessage, memory))).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
-            answer = (await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo)).text;
+            answer = (await getRepositoryInfo(userMessage, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {
-            answer = (await getFileInfo(msg.text.body, memory, response.owner, response.repo, response.filePath)).text;
+            answer = (await getFileInfo(userMessage, memory, response.owner, response.repo, response.filePath)).text;
         } else {
             req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
