@@ -43,9 +43,11 @@ export const postWebhook = async (req, res) => {
                 req.log.error("Failed to transcribe audio file");
                 return res.status(200).end();
             }
-        } else if (!userMessage) {
+        }
+
+        if (!userMessage) {
             req.log.error("No text body found in the message");
-            return res.status(400).end();
+            return res.status(200).end();
         }
 
         req.log.info(`Message from ${msg.from}: ${userMessage}`);
