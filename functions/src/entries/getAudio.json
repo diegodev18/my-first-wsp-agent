@@ -1,0 +1,42 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1355058086008966",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556482407",
+              "phone_number_id": "817550874773660"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Diego Sanchez"
+                },
+                "wa_id": "5215638755260"
+              }
+            ],
+            "messages": [
+              {
+                "from": "5215638755260",
+                "id": "wamid.HBgNNTIxNTYzODc1NTI2MBUCABIYFDNBNThFNTZDNDA0NjU2QzdDREY5AA==",
+                "timestamp": "1759453285",
+                "type": "audio",
+                "audio": {
+                  "mime_type": "audio/ogg; codecs=opus",
+                  "sha256": "L1QR6xsKcd88SPdKZyvS8+4PSZrxG1fA90btz5QUpl8=",
+                  "id": "4097454653843968",
+                  "voice": true
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
