@@ -31,7 +31,7 @@ export const postWebhook = async (req, res) => {
     if (msg && (msg.type === "text" || msg.type === "audio") && msg.from) {
         await handleTypingIndicator(msg.from, msg.id);
 
-        let userMessage = msg.text.body;
+        let userMessage;
         if (msg.type === "audio") {
             const audioFilePath = await downloadAudio(msg.audio.id);
             if (!audioFilePath) {
@@ -43,6 +43,11 @@ export const postWebhook = async (req, res) => {
                 req.log.error("Failed to transcribe audio file");
                 return res.status(200).end();
             }
+        } else if (msg.type === "text" && msg.text && msg.text.body) {
+            userMessage = msg.text.body;
+        } else {
+            req.log.error("No valid text body found in the message");
+            return res.status(200).end();
         }
 
         if (!userMessage) {
