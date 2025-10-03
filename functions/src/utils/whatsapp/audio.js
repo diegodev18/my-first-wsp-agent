@@ -19,13 +19,19 @@ export const downloadAudio = async (mediaId) => {
     const timestamp = Date.now().toString();
     const filePath = `/tmp/audio_${timestamp}.ogg`;
 
-    const audioDownloaded = await fetch(data.url, {
-        headers: {
-            "Authorization": `Bearer ${WHATSAPP_ACCESS_TOKEN}`
-        },
-        output: filePath
-    });
-    if (!audioDownloaded.ok) return null;
+    try {
+        const audioDownloaded = await fetch(data.url, {
+            headers: {
+                "Authorization": `Bearer ${WHATSAPP_ACCESS_TOKEN}`
+            },
+            output: filePath
+        });
+        if (!audioDownloaded.ok) return null;
 
-    return filePath;
+        return filePath;
+    } catch (err) {
+        console.error("Error downloading audio file:", err);
+        return null;
+    }
+
 }
