@@ -20,7 +20,7 @@ export const get = async (audioBase64) => {
             model: GEMINI_MODEL,
         });
 
-        return response.candidates[0].content.parts[0].text;
+        return response;
     } catch (err) {
         console.error("Error transcribing audio:", err);
         return null;
