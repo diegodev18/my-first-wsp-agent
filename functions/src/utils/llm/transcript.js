@@ -34,3 +34,16 @@ export const get = async (audioFilePath) => {
         return null;
     }
 };
+
+(async () => {
+    console.log("Starting transcription test...");
+
+    const transcriptText = await get("audio.ogg");
+
+    if (!transcriptText) {
+        console.error("No transcription received");
+        return;
+    }
+
+    console.log("Transcription received:", transcriptText.text);
+})();
