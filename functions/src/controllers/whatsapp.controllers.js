@@ -62,5 +62,13 @@ export const postWebhook = async (req, res) => {
         fetchPostWhatsapp(msg.from, payload);
     }
 
+    if (msg && msg.type === "audio" && msg.from && msg.audio) {
+        req.log.info(`Audio message from ${msg.from}, media ID: ${msg.audio.id}`);
+
+        await handleTypingIndicator(msg.from, msg.id);
+
+        req.log.info(`Transcription for audio message from ${msg.from} is not implemented yet.`);
+    }
+
     return res.status(200).end();
 }
