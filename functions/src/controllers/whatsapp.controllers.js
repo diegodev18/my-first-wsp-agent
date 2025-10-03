@@ -34,15 +34,12 @@ export const postWebhook = async (req, res) => {
         let userMessage;
         if (msg.type === "audio") {
             const audioData = await getAudioBase64(msg.audio.id);
-            if (!audioData) {
-                req.log.error("Failed to download audio file");
-                return res.status(200).end();
-            }
-            userMessage = await transcriptAudio(audioData);
-            if (!userMessage) {
-                req.log.error("Failed to transcribe audio file");
-                return res.status(200).end();
-            }
+            if (!audioData) return res.status(200).end();
+
+            const transcripted = await transcriptAudio(audioData);
+            if (!transcripted) return res.status(200).end();
+
+            userMessage = transcripted.text;
         } else if (msg.type === "text" && msg.text && msg.text.body) {
             userMessage = msg.text.body;
         } else {
