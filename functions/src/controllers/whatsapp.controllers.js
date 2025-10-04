@@ -2,7 +2,7 @@ import { WHATSAPP_VERIFY_TOKEN } from "../config.js";
 import { fetchPost as fetchPostWhatsapp } from "../utils/whatsapp/api.js";
 import { get as getMemory, add as addMemory } from "../utils/db/memory.js";
 import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/llm/repository.js";
-import { get as askToLlm } from "../utils/llm/content.js";
+import { get as askToLlm } from "../utils/llm/ask.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 import { get as transcriptAudio } from "../utils/llm/transcript.js";

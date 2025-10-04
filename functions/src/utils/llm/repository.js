@@ -1,4 +1,4 @@
-import { get as askToLlm } from "./content.js";
+import { get as askToLlm } from "./ask.js";
 import { getData as getRepositoryData } from "../github/repository.js";
 import { getData as getFileData } from "../github/file.js";
 import { promptParams, promptRepositoryInfo, promptFileInfo } from "./prompt.js";

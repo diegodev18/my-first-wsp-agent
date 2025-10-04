@@ -1,6 +1,6 @@
 import { db } from "../../lib/firebase.js";
 import { promptNewMemory } from "../llm/prompt.js";
-import { get as askToLlm } from "../llm/content.js";
+import { get as askToLlm } from "../llm/ask.js";
 
 export const get = async (waId) => {
     const collection = db.collection("memory");
