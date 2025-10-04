@@ -5,6 +5,8 @@ import { getParamsFromPrompt, getRepositoryInfo, getFileInfo } from "../utils/ll
 import { get as askToLlm } from "../utils/llm/content.js";
 import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
+import { get as transcriptAudio } from "../utils/llm/transcript.js";
+import { get as getAudioBase64 } from "../utils/whatsapp/audio.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -26,29 +28,50 @@ export const postWebhook = async (req, res) => {
     const messages = value && value.messages;
     const msg = messages && messages[0];
 
-    if (msg && msg.type === "text" && msg.from && msg.text) {
-        req.log.info(`Message from ${msg.from}: ${msg.text.body}`);
-
+    if (msg && (msg.type === "text" || msg.type === "audio") && msg.from) {
         await handleTypingIndicator(msg.from, msg.id);
+
+        let userMessage;
+        if (msg.type === "audio") {
+            const audioData = await getAudioBase64(msg.audio.id);
+            if (!audioData) return res.status(200).end();
+
+            const transcripted = await transcriptAudio(audioData);
+            if (!transcripted) return res.status(200).end();
+
+            userMessage = transcripted.text;
+        } else if (msg.type === "text" && msg.text && msg.text.body) {
+            userMessage = msg.text.body;
+        } else {
+            req.log.error("No valid text body found in the message");
+            return res.status(200).end();
+        }
+
+        if (!userMessage) {
+            req.log.error("No text body found in the message");
+            return res.status(200).end();
+        }
+
+        req.log.info(`Message from ${msg.from}: ${userMessage}`);
 
         let answer = "Perdon, no pude procesar tu solicitud en este momento.";
 
         const memory = await getMemory(msg.from);
 
-        const response = await getParamsFromPrompt(msg.text.body, memory);
+        const response = await getParamsFromPrompt(userMessage, memory);
 
-        addMemory(msg.from, msg.text.body);
+        addMemory(msg.from, userMessage);
 
         if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
         } else if (response.type === "general") {
-            answer = (await askToLlm(generalPrompt(msg.text.body, memory))).text;
+            answer = (await askToLlm(generalPrompt(userMessage, memory))).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
-            answer = (await getRepositoryInfo(msg.text.body, memory, response.owner, response.repo)).text;
+            answer = (await getRepositoryInfo(userMessage, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {
-            answer = (await getFileInfo(msg.text.body, memory, response.owner, response.repo, response.filePath)).text;
+            answer = (await getFileInfo(userMessage, memory, response.owner, response.repo, response.filePath)).text;
         } else {
             req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
@@ -60,6 +83,14 @@ export const postWebhook = async (req, res) => {
             }
         };
         fetchPostWhatsapp(msg.from, payload);
+    }
+
+    if (msg && msg.type === "audio" && msg.from && msg.audio) {
+        req.log.info(`Audio message from ${msg.from}, media ID: ${msg.audio.id}`);
+
+        await handleTypingIndicator(msg.from, msg.id);
+
+        req.log.info(`Transcription for audio message from ${msg.from} is not implemented yet.`);
     }
 
     return res.status(200).end();
