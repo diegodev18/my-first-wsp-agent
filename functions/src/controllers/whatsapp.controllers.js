@@ -7,6 +7,7 @@ import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 import { get as transcriptAudio } from "../utils/llm/transcript.js";
 import { get as getAudioBase64 } from "../utils/whatsapp/audio.js";
+import { add as addHistory } from "../utils/db/history.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -61,6 +62,7 @@ export const postWebhook = async (req, res) => {
         const response = await getParamsFromPrompt(userMessage, memory);
 
         addMemory(msg.from, userMessage);
+        addHistory(msg.from, { role: "user", content: userMessage });
 
         if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
