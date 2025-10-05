@@ -66,6 +66,8 @@ export const postWebhook = async (req, res) => {
             req.log.error("No response from LLM or response is invalid");
         } else if (response.type === "general" && response.reason) {
             answer = response.reason;
+        } else if (response.type === "general" && response.content) {
+            answer = response.content;
         } else if (response.type === "general") {
             answer = (await askToLlm(generalPrompt(userMessage, memory))).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
