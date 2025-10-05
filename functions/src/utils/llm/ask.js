@@ -1,7 +1,7 @@
 import { promptRules } from "./prompt.js";
 import { get as generateContent } from "./content.js";
 
-export const get = async (userPrompt, history = []) => {
+export const get = async (userPrompt, history = [], rules = true) => {
     if (!userPrompt || typeof userPrompt !== "string" || userPrompt.trim() === "") {
         return null;
     }
@@ -14,7 +14,7 @@ export const get = async (userPrompt, history = []) => {
 
         const currentUserMessage = {
             role: "user",
-            parts: [{ text: promptRules(userPrompt) }],
+            parts: [{ text: rules ? promptRules(userPrompt) : userPrompt }],
         };
         contents.push(currentUserMessage);
 
