@@ -14,7 +14,7 @@ export const get = async (waId) => {
     }
 }
 
-export const add = async (waId, role, content) => {
+export const add = async (waId, { role, content }) => {
     const docRef = collection.doc(waId);
 
     const doc = await docRef.get();
