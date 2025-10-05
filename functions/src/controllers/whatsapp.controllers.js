@@ -62,7 +62,6 @@ export const postWebhook = async (req, res) => {
         const response = await getParamsFromPrompt(userMessage, memory);
 
         addMemory(msg.from, userMessage);
-        addHistory(msg.from, { role: "user", content: userMessage });
 
         if (!response || typeof response !== "object") {
             req.log.error("No response from LLM or response is invalid");
@@ -80,7 +79,9 @@ export const postWebhook = async (req, res) => {
             req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
 
-        addHistory(msg.from, { role: "model", content: answer });
+        addHistory(msg.from, { role: "user", content: userMessage }).then(() => {
+            addHistory(msg.from, { role: "model", content: answer });
+        });
 
         const payload = {
             type: "text",
