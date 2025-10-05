@@ -1,7 +1,7 @@
 import { ai } from "../../lib/llm.js"
 import { GEMINI_MODEL } from "../../config.js";
 
-export const get = async (contents) => {
+export const get = async (contents, customConfig) => {
     try {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
@@ -14,7 +14,8 @@ export const get = async (contents) => {
                 candidateCount: 1,
                 thinkingConfig: {
                     thinkingBudget: 0,
-                }
+                },
+                ...customConfig
             }
         });
         return response;
