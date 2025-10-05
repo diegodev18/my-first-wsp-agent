@@ -20,10 +20,14 @@ export const add = async (waId, { role, content }) => {
     const doc = await docRef.get();
     if (doc.exists) {
         const data = doc.data();
-        const updatedHistory = data.history && Array.isArray(data.history) ?
-            [...data.history, { role, content }] :
-            [{ role, content }];
-        await docRef.update({ history: updatedHistory });
+        try {
+            const updatedHistory = data.history && Array.isArray(data.history) ?
+                [...data.history, { role, content }] :
+                [{ role, content }];
+            await docRef.update({ history: updatedHistory });
+        } catch (err) {
+            console.error("Error updating history:", err);
+        }
     } else {
         await docRef.set({ history: [{ role, content }] });
     }
