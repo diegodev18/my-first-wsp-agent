@@ -7,7 +7,13 @@ export const get = async (waId) => {
 
     const doc = await docRef.get();
     if (doc.exists) {
-        return doc.data().history || [];
+        /**
+         * @type {Array<{role: string, content: string}>}
+         */
+        const history = doc.data().history;
+        if (!history || !Array.isArray(history)) return [];
+
+        return history.slice(-10);
     } else {
         await docRef.set({ history: [] });
         return [];
