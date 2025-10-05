@@ -8,8 +8,9 @@ import { promptParams, promptRepositoryInfo, promptFileInfo } from "./prompt.js"
  * @param {string} userMemory 
  * @returns
  */
-export const getParamsFromPrompt = async (prompt, userMemory) => {
-    const llmResponse = await askToLlm(promptParams(prompt, userMemory));
+export const getParamsFromPrompt = async (prompt, userMemory, history) => {
+    const llmResponse = await askToLlm(promptParams(prompt, userMemory), history);
+    if (!llmResponse) return null;
 
     try {
         const llmResponseJson = llmResponse.text.trim().replace(/^\s*```json\s*/, "").replace(/\s*```\s*$/, "");
@@ -27,7 +28,7 @@ export const getParamsFromPrompt = async (prompt, userMemory) => {
 
         return params;
     } catch (_) {
-        console.error("Error parsing LLM response:", llmResponse.text);
+        console.error("Error parsing LLM response:", llmResponse && llmResponse.text ? llmResponse.text : "No text available");
 
         return null;
     }

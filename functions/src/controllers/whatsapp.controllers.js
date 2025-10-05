@@ -7,6 +7,7 @@ import { generalPrompt } from "../utils/llm/prompt.js";
 import { handleTypingIndicator } from "../utils/whatsapp/typing.js";
 import { get as transcriptAudio } from "../utils/llm/transcript.js";
 import { get as getAudioBase64 } from "../utils/whatsapp/audio.js";
+import { add as addHistory, get as getHistory } from "../utils/db/history.js";
 
 export const getWebhook = (req, res) => {
     const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": verifyToken } = req.query;
@@ -58,7 +59,9 @@ export const postWebhook = async (req, res) => {
 
         const memory = await getMemory(msg.from);
 
-        const response = await getParamsFromPrompt(userMessage, memory);
+        const history = await getHistory(msg.from);
+
+        const response = await getParamsFromPrompt(userMessage, memory, history);
 
         addMemory(msg.from, userMessage);
 
@@ -69,7 +72,7 @@ export const postWebhook = async (req, res) => {
         } else if (response.type === "general" && response.content) {
             answer = response.content;
         } else if (response.type === "general") {
-            answer = (await askToLlm(generalPrompt(userMessage, memory))).text;
+            answer = (await askToLlm(generalPrompt(userMessage, memory), history)).text;
         } else if (response.type === "repository" && response.owner && response.repo) {
             answer = (await getRepositoryInfo(userMessage, memory, response.owner, response.repo)).text;
         } else if (response.type === "file") {
@@ -77,6 +80,10 @@ export const postWebhook = async (req, res) => {
         } else {
             req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
+
+        addHistory(msg.from, { role: "user", content: userMessage }).then(() => {
+            addHistory(msg.from, { role: "model", content: answer });
+        });
 
         const payload = {
             type: "text",
