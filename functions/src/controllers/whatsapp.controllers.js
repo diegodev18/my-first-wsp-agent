@@ -59,9 +59,9 @@ export const postWebhook = async (req, res) => {
 
         const memory = await getMemory(msg.from);
 
-        const response = await getParamsFromPrompt(userMessage, memory, history);
-
         const history = await getHistory(msg.from);
+
+        const response = await getParamsFromPrompt(userMessage, memory, history);
 
         addMemory(msg.from, userMessage);
 
