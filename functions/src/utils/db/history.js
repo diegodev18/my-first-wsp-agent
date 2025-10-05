@@ -11,7 +11,10 @@ export const get = async (waId) => {
          * @type {Array<{role: string, parts: Array<{text: string}>}>}
          */
         const history = doc.data().history;
-        if (!history || !Array.isArray(history)) return [];
+        if (!history || !Array.isArray(history)) {
+            await docRef.set({ history: [] });
+            return [];
+        }
 
         return history.slice(-10);
     } else {
