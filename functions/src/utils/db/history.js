@@ -8,7 +8,7 @@ export const get = async (waId) => {
     const doc = await docRef.get();
     if (doc.exists) {
         /**
-         * @type {Array<{role: string, content: string}>}
+         * @type {Array<{role: string, parts: Array<{text: string}>}>}
          */
         const history = doc.data().history;
         if (!history || !Array.isArray(history)) return [];
@@ -23,18 +23,24 @@ export const get = async (waId) => {
 export const add = async (waId, { role, content }) => {
     const docRef = collection.doc(waId);
 
+    // Convert content to Gemini API format
+    const message = {
+        role,
+        parts: [{ text: content }]
+    };
+
     const doc = await docRef.get();
     if (doc.exists) {
         const data = doc.data();
         try {
             const updatedHistory = data.history && Array.isArray(data.history) ?
-                [...data.history, { role, content }] :
-                [{ role, content }];
+                [...data.history, message] :
+                [message];
             await docRef.update({ history: updatedHistory });
         } catch (err) {
             console.error("Error updating history:", err);
         }
     } else {
-        await docRef.set({ history: [{ role, content }] });
+        await docRef.set({ history: [message] });
     }
 }
