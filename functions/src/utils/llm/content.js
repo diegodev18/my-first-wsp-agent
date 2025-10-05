@@ -6,12 +6,15 @@ export const get = async (contents) => {
         const response = await ai.models.generateContent({
             model: GEMINI_MODEL,
             contents: contents,
-            generationConfig: {
+            config: {
                 temperature: 0.7,
                 maxOutputTokens: 500,
                 topK: 40,
                 topP: 0.9,
                 candidateCount: 1,
+                thinkingConfig: {
+                    thinkingBudget: 0,
+                }
             }
         });
         return response;
