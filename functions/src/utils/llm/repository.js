@@ -39,7 +39,7 @@ export const getRepositoryInfo = async (userPrompt, userMemory, owner, repo, aut
 
     if (!data) {
         return {
-            text: "No se pudo obtener la información del repositorio en este momento."
+            text: `No se pudo obtener la información del repositorio ${owner}/${repo} en este momento.`
         }
     };
 
@@ -91,7 +91,7 @@ export const getFileInfo = async (userPrompt, userMemory, owner, repo, filePath,
 
     if (!data) {
         return {
-            text: "No se pudo obtener la información del archivo en este momento."
+            text: `No se pudo obtener la información del archivo ${filePath} en el repositorio ${owner}/${repo} en este momento.`
         };
     }
 

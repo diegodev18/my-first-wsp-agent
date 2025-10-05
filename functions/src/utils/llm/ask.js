@@ -14,11 +14,15 @@ export const get = async (userPrompt, history = [], rules = true) => {
 
         const currentUserMessage = {
             role: "user",
-            parts: [{ text: rules ? promptRules(userPrompt) : userPrompt }],
+            parts: [{ text: userPrompt }],
         };
         contents.push(currentUserMessage);
 
-        const response = await generateContent(contents);
+        const customConfig = rules ? {
+            systemInstruction: promptRules,
+        } : {};
+
+        const response = await generateContent(contents, customConfig);
         return response;
     } catch (err) {
         console.error("Error calling LLM:", err);
