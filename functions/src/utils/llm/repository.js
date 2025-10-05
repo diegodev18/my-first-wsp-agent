@@ -8,8 +8,8 @@ import { promptParams, promptRepositoryInfo, promptFileInfo } from "./prompt.js"
  * @param {string} userMemory 
  * @returns
  */
-export const getParamsFromPrompt = async (prompt, userMemory) => {
-    const llmResponse = await askToLlm(promptParams(prompt, userMemory));
+export const getParamsFromPrompt = async (prompt, userMemory, history) => {
+    const llmResponse = await askToLlm(promptParams(prompt, userMemory), history);
 
     try {
         const llmResponseJson = llmResponse.text.trim().replace(/^\s*```json\s*/, "").replace(/\s*```\s*$/, "");
