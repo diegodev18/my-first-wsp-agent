@@ -80,6 +80,8 @@ export const postWebhook = async (req, res) => {
             req.log.error(`Unknown response type from LLM: ${JSON.stringify(response)}`);
         }
 
+        addHistory(msg.from, { role: "model", content: answer });
+
         const payload = {
             type: "text",
             text: {
